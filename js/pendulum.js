@@ -1,41 +1,46 @@
-// /* global AFRAME */
+AFRAME.registerComponent('pendulum', {
+    init: function () {
+      // Get the entity where the pendulum will be attached
+      const sceneEl = this.el.sceneEl;
+  
+      // Create the thread for the pendulum
+      const thread = document.createElement('a-box');
+      thread.setAttribute('position', '0 0.75 0');
+      thread.setAttribute('depth', '0.05');
+      thread.setAttribute('height', '1');
+      thread.setAttribute('width', '0.05');
+      thread.setAttribute('color', 'black');
+      this.el.appendChild(thread);
+  
+      // Create the pendulum bob
+      const bob = document.createElement('a-sphere');
+      bob.setAttribute('position', '0 -0.75 0');
+      bob.setAttribute('radius', '0.1');
+      bob.setAttribute('color', 'blue');
+      this.el.appendChild(bob);
+  
+      // Set up pendulum swinging motion
+      this.angle = 0; // Initial angle in radians
+      this.angularSpeed = 0.02; // Speed of swinging motion
+    },
+  
+    tick: function () {
+      // Update the pendulum's position to create a swinging motion
+      this.angle += this.angularSpeed;
+  
+      const bob = this.el.querySelector('a-sphere');
+      const thread = this.el.querySelector('a-box');
+  
+      // Swinging effect
+      const x = Math.sin(this.angle) * 0.5;
+      const y = -Math.cos(this.angle) * 0.5 - 0.5;
+  
+      // Set the new positions for the pendulum bob and thread
+      bob.setAttribute('position', { x: x, y: y, z: 0 });
+      thread.setAttribute('rotation', { x: 0, y: 0, z: Math.sin(this.angle) * 15 });
+    }
+  });
 
-// AFRAME.registerComponent('pendulum', {
-//     schema: {
-//       length: {type: 'number', default: 2}, // default pendulum length
-//     },
-    
-//     init: function() {
-//       this.angle = 0; // Initial angle
-//       this.direction = 1; // Swing direction
-//       this.updatePendulumPosition();
-//       this.el.sceneEl.addEventListener('keydown', this.onKeyPress.bind(this));
-//     },
-  
-//     tick: function() {
-//       // Swing the pendulum
-//       this.angle += this.direction * 0.02; // Adjust speed of swing
-//       if (this.angle > 0.5 || this.angle < -0.5) {
-//         this.direction *= -1; // Change direction
-//       }
-//       this.updatePendulumPosition();
-//     },
-  
-//     updatePendulumPosition: function() {
-//       const length = this.data.length;
-//       const x = length * Math.sin(this.angle);
-//       const y = 5 - length * Math.cos(this.angle); // Height calculation
-//       this.el.setAttribute('position', `${x} ${y} -5`);
-//     },
-  
-//     onKeyPress: function(evt) {
-//       const lengthIncrement = 0.1;
-//       if (evt.key === 'ArrowUp') {
-//         this.data.length += lengthIncrement; // Increase length
-//       } else if (evt.key === 'ArrowDown') {
-//         this.data.length = Math.max(0.1, this.data.length - lengthIncrement); // Decrease length, prevent negative length
-//       }
-//       this.updatePendulumPosition(); // Update position after changing length
-//     }
-//   });
-  
+
+
+
